@@ -7,6 +7,8 @@
 
 ### [▶ Try it live: yoru-cheque.up.railway.app](https://yoru-cheque.up.railway.app)
 
+[Watch the demo on X](https://x.com/witman011/status/2121245409053921430) · built at the NEAR HACKATHON
+
 ![NEAR testnet](https://img.shields.io/badge/NEAR-testnet-00C08B)
 ![Rust](https://img.shields.io/badge/contract-Rust%20·%20near--sdk%205-B7410E)
 ![Tests](https://img.shields.io/badge/unit%20tests-12%20passing-4F7D2C)
