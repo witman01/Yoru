@@ -953,3 +953,138 @@ legend { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; te
 @keyframes loaderBreathe { 50% { opacity: 0.55; } }
 
 .docs-link { text-decoration: none; display: inline-flex; align-items: center; }
+
+/* =========================================================
+   Phones. This block comes last on purpose: it overrides the
+   desktop rules above that otherwise leak into small screens.
+   ========================================================= */
+@media (max-width: 760px) {
+  /* ---- Top bar: compact, and Docs stays reachable ---- */
+  .topbar { padding: 12px 14px; gap: 8px; }
+  .brand-kanji { width: 34px; height: 34px; font-size: 1.25rem; }
+  .topnav { gap: 6px; align-items: center; }
+  .topnav .ghost,
+  .topnav .solid { padding: 0.5em 0.85em; font-size: 0.78rem; }
+  .topnav .ghost.sound,
+  .topnav .ghost.history-btn { display: inline-flex; width: 38px; height: 38px; padding: 0; justify-content: center; }
+  .topnav .ghost.docs-link { display: inline-flex; }
+  .topnav [data-jump='1'],
+  .topnav [data-jump='2'] { display: none; }
+
+  /* ---- Every panel uses the full width at the bottom ---- */
+  .panel,
+  .panel.left,
+  .panel.right { padding: 72px 14px 62px; justify-content: center; align-items: flex-end; }
+  .panel-kanji,
+  .panel.left .panel-kanji,
+  .panel.right .panel-kanji { top: 76px; right: 14px; left: auto; transform: none; font-size: 7.5rem; opacity: 0.7; }
+
+  /* ---- Hero ---- */
+  .panel-lane { background: linear-gradient(0deg, rgba(7, 8, 13, 0.85), rgba(7, 8, 13, 0.35) 55%, transparent 80%); }
+  .hero-kanji { top: 80px; right: 14px; transform: none; font-size: 5.5rem; opacity: 0.5; }
+  .hero-copy { max-width: none; }
+  .kicker { font-size: 0.66rem; letter-spacing: 0.16em; }
+  .hero-copy h1 { font-size: 3.6rem; margin: 0.2rem 0 0.5rem; }
+  .oneliner { font-size: 0.78rem; max-width: none; margin-bottom: 0.8rem; }
+  .lede { font-size: 1.05rem; max-width: none; margin-bottom: 1.1rem; }
+  .hero-actions .solid,
+  .hero-actions .ghost { font-size: 0.82rem; padding: 0.6em 1.1em; }
+  .hero-meta { font-size: 0.62rem; letter-spacing: 0.1em; margin-top: 1rem; }
+  .hint { bottom: 64px; font-size: 0.62rem; }
+
+  /* ---- Object panels: compact, so the object stays visible above ---- */
+  .panel-copy { max-width: none; width: 100%; padding: 16px 18px 14px; max-height: 46vh; overflow-y: auto; }
+  .panel-copy::before { display: none; }
+  .reading { display: none; }
+  .panel-num { font-size: 0.66rem; }
+  .panel h2 { font-size: 1.55rem; margin: 0.3rem 0 0.4rem; }
+  .body { font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.8rem; }
+  .examine { font-size: 0.78rem; padding: 0.5em 1em; }
+
+  /* ---- Use cases: a tidy list instead of a sideways strip ---- */
+  .panel.center { align-items: flex-start; padding-top: 70px; }
+  .uses { padding: 16px 14px 12px; max-height: calc(100vh - 140px); overflow-y: auto; }
+  .uses .kicker,
+  .uses h2 { padding: 0; }
+  .uses h2 { font-size: 1.3rem; margin: 0.25rem 0 0.75rem; }
+  .use-grid { display: grid; grid-template-columns: 1fr; overflow: visible; padding: 0; gap: 6px; }
+  .use { display: grid; grid-template-columns: 30px 1fr; column-gap: 10px; align-items: start; padding: 8px 10px; flex: none; }
+  .use-seal { grid-row: span 2; width: 28px; height: 28px; margin: 2px 0 0; font-size: 0.85rem; }
+  .use h3 { font-size: 0.92rem; margin: 0; }
+  .use p { font-size: 0.76rem; line-height: 1.35; }
+
+  /* ---- The counter scroll fits between the top bar and the index ---- */
+  .panel.panel-counter { padding: 62px 8px 56px; align-items: flex-start; }
+  .finale.scroll { width: 100%; }
+  .scroll-rod { height: 14px; margin: 0 -4px; }
+  .scroll-rod::before,
+  .scroll-rod::after { width: 15px; height: 20px; top: -3px; }
+  .scroll-rod::before { left: -6px; }
+  .scroll-rod::after { right: -6px; }
+  .scroll-paper { border-left-width: 6px; border-right-width: 6px; }
+  .scroll-inner { max-height: calc(100vh - 62px - 56px - 34px); overflow-y: auto; padding: 12px 14px 10px; }
+  .finale.scroll .finale-head .panel-num,
+  .finale.scroll .finale-head .body { display: none; }
+  .finale.scroll .finale-head h2 { font-size: 1.35rem; margin: 0 0 0.5rem; }
+  .finale.scroll .tabs { margin-bottom: 0.6rem; }
+  .finale.scroll .tab { padding: 0.38rem 0.2rem; font-size: 0.8rem; }
+  .finale.scroll .pane { gap: 0.5rem; }
+  .finale.scroll .pane label,
+  .finale.scroll legend { font-size: 0.62rem; }
+  .finale.scroll .pane input:not([type='radio']) { padding: 0.5rem 0.6rem; font-size: 0.95rem; }
+  .choice { padding: 0.4rem 0.2rem 0.35rem; }
+  .choice-k { width: 24px; height: 24px; font-size: 0.82rem; }
+  .choice-t { font-size: 0.74rem; }
+  .account-hint { display: none; }
+  .seal-kanji { width: 52px; height: 52px; font-size: 1.4rem; }
+  .seal-label { font-size: 0.62rem; }
+  .finale.scroll .mock-note { font-size: 0.56rem; margin-top: 0.4rem; }
+
+  /* ---- History: a full-width scroll with the page dimmed behind ---- */
+  #history { left: 10px; right: 10px; width: auto; top: 62px; box-shadow: 0 0 0 100vmax rgba(4, 5, 8, 0.6); }
+  .history-paper { max-height: calc(100vh - 120px); padding: 14px 16px; }
+  .history-head h2 { font-size: 1.25rem; }
+
+  /* ---- Close-up: arrows stay clear of the text ---- */
+  .detail-copy { padding: 0 16px 96px; }
+  .detail-nav { position: fixed; bottom: 18px; padding: 6px; border-radius: 999px; background: rgba(7, 8, 13, 0.85); z-index: 2; }
+  .detail-close { top: 14px; right: 14px; padding: 0.4rem 0.8rem; font-size: 0.66rem; }
+  .detail-kanji { font-size: 2.6rem; }
+  .detail-title { font-size: 1.6rem; }
+  .detail-body { font-size: 0.9rem; }
+
+  /* ---- Moments and toasts ---- */
+  .moment-card { padding: 22px 18px 18px; }
+  .moment h2 { font-size: 1.5rem; }
+  .moment-kanji { width: 58px; height: 58px; font-size: 2rem; }
+  .toasts { top: 64px; }
+}
+
+/* Small phones (360px and under). */
+@media (max-width: 380px) {
+  .topnav .solid { font-size: 0.72rem; padding: 0.5em 0.7em; }
+  .hero-copy h1 { font-size: 3rem; }
+  .choice-t { font-size: 0.68rem; }
+}
+
+/* Short screens in landscape: let panels scroll rather than clip. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .panel { padding-top: 60px; padding-bottom: 12px; }
+  .panel-copy, .uses, .scroll-inner { max-height: calc(100vh - 80px); overflow-y: auto; }
+  #index { display: none; }
+}
+
+/* Phone touch-ups after review on iPhone 14 (390x664) and Galaxy S8 (360x740). */
+@media (max-width: 760px) {
+  .panel-lane { padding-bottom: 96px; }
+  .hint { bottom: 22px; }
+  .uses .kicker { display: none; }
+  .uses h2 { font-size: 1.12rem; margin: 0 0 0.55rem; }
+  .use-grid { gap: 4px; }
+  .use { padding: 6px 10px; }
+  .use h3 { font-size: 0.86rem; }
+  .use p { font-size: 0.72rem; line-height: 1.3; }
+  .detail-nav { top: 14px; bottom: auto; left: 14px; transform: none; background: none; padding: 0; }
+  .detail-nav button { width: 38px; height: 38px; }
+  .detail-copy { padding-bottom: 40px; }
+}
