@@ -1,0 +1,35 @@
+[package]
+name = "yoru"
+description = "Escrow for private cheques claimed with an ed25519 signature derived from a short code"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/your-name/yoru"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[package.metadata.near.reproducible_build]
+image = "sourcescan/cargo-near:0.23.0-rust-1.95.0"
+image_digest = ""
+passed_env = []
+container_build_command = ["cargo", "near", "build", "non-reproducible-wasm", "--locked"]
+
+[features]
+# Build with a 3-minute claim window instead of 7 days, for the live demo.
+demo-window = []
+
+[dependencies]
+near-sdk = "5.30.1"
+hex = "0.4.3"
+
+[dev-dependencies]
+near-sdk = { version = "5.30.1", features = ["unit-testing"] }
+ed25519-dalek = "2.2.0"
+
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true

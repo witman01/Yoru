@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yoru</title>
+    <meta name="description" content="Private claimable escrow on NEAR. Short code, bound receiver, gasless claim." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='8' fill='%23c8402f' transform='rotate(-4 32 32)'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23efe6d2' font-family='serif' font-weight='700'%3E%E5%A4%9C%3C/text%3E%3C/svg%3E" />
+    <meta name="theme-color" content="#07080d" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="scene" aria-hidden="true"></canvas>
+
+    <div id="loader" role="status">
+      <div class="loader-kanji">夜</div>
+      <div class="loader-label">Lighting lanterns <span id="loader-count">0</span></div>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="#" data-jump="0">
+        <span class="brand-kanji">夜</span>
+        <span class="brand-name">Yoru</span>
+      </a>
+      <nav class="topnav">
+        <button class="ghost sound" id="sound" aria-pressed="false" title="Play the night garden"><span class="sound-icon" aria-hidden="true">♪</span><span class="sound-label">Sound</span></button>
+        <button class="ghost history-btn" id="history-btn" aria-label="History"><span aria-hidden="true">記</span><span class="history-label">History</span><span class="badge" hidden>0</span></button>
+        <button class="ghost" data-jump="1">Use cases</button>
+        <button class="ghost" data-jump="2">How it works</button>
+        <button class="solid" data-jump="8">Leave a cheque</button>
+      </nav>
+    </header>
+
+    <!-- Section copy, faded in by scroll position. -->
+    <div id="panels"></div>
+
+    <nav id="index" aria-label="Tea house index"></nav>
+
+    <div class="hint" id="scroll-hint">Scroll to enter <span>↓</span></div>
+
+    <!-- Close-up of one object. -->
+    <div id="detail" hidden>
+      <div class="detail-ink"></div>
+      <canvas id="detail-canvas"></canvas>
+      <aside class="detail-copy">
+        <div class="detail-num"></div>
+        <div class="detail-kanji"></div>
+        <h2 class="detail-title"></h2>
+        <p class="detail-body"></p>
+        <dl class="detail-specs"></dl>
+        <div class="detail-actions">
+          <button class="solid" id="detail-play">Perform</button>
+          <span class="detail-tip">Drag to turn</span>
+        </div>
+      </aside>
+      <button class="detail-close" id="detail-close">Close · Esc</button>
+      <div class="detail-nav">
+        <button id="detail-prev" aria-label="Previous object">←</button>
+        <button id="detail-next" aria-label="Next object">→</button>
+      </div>
+    </div>
+
+    <!-- History: a scroll that unrolls from the right. -->
+    <aside id="history" hidden aria-label="History">
+      <div class="scroll-rod" aria-hidden="true"></div>
+      <div class="history-paper">
+        <div class="history-head">
+          <h2><span>記</span> History</h2>
+          <button class="ghost small" id="history-close">Close · Esc</button>
+        </div>
+        <p class="history-note">Kept in this browser only.</p>
+        <h3>Your cheques</h3>
+        <ul id="history-sent" class="history-sent"></ul>
+        <h3>What happened</h3>
+        <ul id="history-list" class="history-list"></ul>
+      </div>
+      <div class="scroll-rod bottom" aria-hidden="true"></div>
+    </aside>
+
+    <p class="page-credits">Music: <a href="https://commons.wikimedia.org/wiki/File:Koto_performance.ogg" target="_blank" rel="noopener">Koto performance</a> by Torsodog,
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a> ·
+      <a href="https://commons.wikimedia.org/wiki/File:Shikanotoone_new.ogg" target="_blank" rel="noopener">Shika no Tōne</a>, shakuhachi, Araki Kodō III, public domain</p>
+
+    <div id="spacer"></div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

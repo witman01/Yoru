@@ -1,0 +1,10 @@
+node_modules/
+contract/target/
+agents/.wallets/
+agents/inbox/
+
+# Editor and assistant files stay local
+.claude/
+CLAUDE.md
+.vscode/
+.DS_Store

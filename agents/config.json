@@ -1,0 +1,7 @@
+{
+  "contract": "yoru-183ae9.testnet",
+  "demoContract": "yoru-demo-183ae9.testnet",
+  "agentA": "yoru-agent-a-183ae9.testnet",
+  "relayer": "yoru-relayer-183ae9.testnet",
+  "attacker": "yoru-attacker-183ae9.testnet"
+}
