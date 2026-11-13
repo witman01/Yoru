@@ -140,7 +140,7 @@ amount ([refund](https://testnet.nearblocks.io/txns/1Sq3GWjAwmEPhpRwhLHpmKeaNQxv
 A late `agent-b.mjs claim --demo` is refused: `cheque 0 is Refunded`.
 
 **The same thing, for people.**
-`cd web && python -m http.server 5180`, open http://127.0.0.1:5180 and
+Open **https://yoru-cheque.up.railway.app** (or run `npm start` and open http://localhost:8787) and
 scroll to the counter:
 - **Collect:** paste a code, choose "I have no account" and press Collect.
   The relayer pays and you get a link to the transaction plus a key file

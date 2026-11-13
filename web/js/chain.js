@@ -4,7 +4,10 @@ export const CHAIN = {
   network: 'testnet',
   contract: 'yoru-183ae9.testnet',
   rpc: 'https://test.rpc.fastnear.com',
-  relayer: 'http://127.0.0.1:8787/claim',
+  // server.mjs serves the site and the courier together, so the same origin
+  // works locally and when hosted. A plain static server (python) on another
+  // port falls back to the standalone relayer.
+  relayer: location.port === '5180' ? 'http://127.0.0.1:8787/claim' : '/claim',
   explorer: 'https://testnet.nearblocks.io',
 };
 

@@ -7,6 +7,8 @@ at the end.
 
 ---
 
+**Live:** https://yoru-cheque.up.railway.app · **Code:** https://github.com/witman01/Yoru
+
 ## The one-liner
 
 **Yoru is private claimable escrow on NEAR: leave money behind a short code,

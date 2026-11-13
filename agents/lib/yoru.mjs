@@ -134,8 +134,12 @@ export function parseNear(near) {
   return (BigInt(w) * 10n ** 24n + BigInt((f + '0'.repeat(24)).slice(0, 24))).toString();
 }
 
-/** A legacy-keychain key file written by near-cli. */
+/**
+ * An account's private key: RELAYER_PRIVATE_KEY for the relayer when set (a
+ * hosted server has no keychain), otherwise near-cli's legacy keychain file.
+ */
 export function credentials(accountId) {
+  if (accountId === config().relayer && process.env.RELAYER_PRIVATE_KEY) return process.env.RELAYER_PRIVATE_KEY.trim();
   const file = join(homedir(), '.near-credentials', config().network, `${accountId}.json`);
   return JSON.parse(readFileSync(file, 'utf8')).private_key;
 }

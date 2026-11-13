@@ -5,6 +5,8 @@
 **Private claimable escrow on NEAR.**<br/>
 **Short code · bound receiver · gasless claim.**
 
+### [▶ Try it live: yoru-cheque.up.railway.app](https://yoru-cheque.up.railway.app)
+
 ![NEAR testnet](https://img.shields.io/badge/NEAR-testnet-00C08B)
 ![Rust](https://img.shields.io/badge/contract-Rust%20·%20near--sdk%205-B7410E)
 ![Tests](https://img.shields.io/badge/unit%20tests-12%20passing-4F7D2C)
@@ -224,6 +226,12 @@ one per step of the protocol, to the counter where you use it.
 
 ## Live on NEAR testnet
 
+| | |
+|---|---|
+| **Website** | [yoru-cheque.up.railway.app](https://yoru-cheque.up.railway.app) |
+| **Docs** | [yoru-cheque.up.railway.app/docs.html](https://yoru-cheque.up.railway.app/docs.html) |
+| **Courier (relayer)** | `POST https://yoru-cheque.up.railway.app/claim`, hosted on Railway, pays the gas |
+
 | Contract | Claim window | Used for |
 |---|---|---|
 | [`yoru-183ae9.testnet`](https://testnet.nearblocks.io/address/yoru-183ae9.testnet) | 7 days | The site and the agents |
@@ -234,23 +242,28 @@ one per step of the protocol, to the counter where you use it.
 | What | Command |
 |---|---|
 | Install | `npm install` |
-| Relayer (keep running) | `node agents/relayer.mjs` |
+| Website + courier together | `npm start`, then open http://localhost:8787 |
+| Relayer alone (for the agents) | `node agents/relayer.mjs` |
 | Agent A pays | `node agents/agent-a.mjs pay 0.5` |
 | Agent B collects | `node agents/agent-b.mjs claim` |
 | Attack demo | `node agents/agent-b.mjs claim --hold` then `node agents/attacker.mjs --intercept` |
-| Website | `cd web && python -m http.server 5180`, then open http://127.0.0.1:5180 |
 | Contract tests | `cd contract && cargo test` |
 | Contract build | `cargo near build non-reproducible-wasm --no-abi` (add `--features demo-window` for 3 minutes) |
 
 On Windows with the GNU Rust toolchain, `cargo test` needs MinGW-w64
-installed at a path without spaces. The website's Collect needs the relayer
-running.
+installed at a path without spaces.
+
+**Deploying:** `server.mjs` serves `web/` and the courier on one port, so any
+Node host works. Set `RELAYER_PRIVATE_KEY` to the relayer account's key
+(`ed25519:…`) and, optionally, `RELAYER_DAILY_CAP`. The live site runs on
+Railway with Node 24.
 
 ## Repository
 
 | Path | What |
 |---|---|
 | `contract/` | Rust escrow contract and its 12 unit tests |
+| `server.mjs` | One process for the website and the courier (`npm start`) |
 | `agents/` | Agent A, Agent B, the relayer, the attacker and the refunder |
 | `web/` | The tea house (`index.html`) and the docs page (`docs.html`) |
 | `web/audio/` | Koto (CC BY 3.0, Torsodog) and shakuhachi (public domain) recordings from Wikimedia Commons |
@@ -265,7 +278,7 @@ running.
 | Exchanges | Need mainnet; some require a memo, which a plain transfer can't carry |
 | MetaMask | A `0x…` address receives NEAR on NEAR, not ETH on Ethereum |
 | Bearer codes | Whoever holds the code or link can collect; send it only to the intended person |
-| Relayer | A single demo service; anyone can run another, since the contract doesn't care who submits |
+| Relayer | One hosted courier with per-IP and daily limits; anyone can run another, since the contract doesn't care who submits |
 
 ## Credits
 

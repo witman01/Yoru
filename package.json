@@ -4,6 +4,7 @@
   "type": "module",
   "description": "Private claimable escrow on NEAR: agent demo scripts",
   "scripts": {
+    "start": "node server.mjs",
     "agent:a": "node agents/agent-a.mjs",
     "agent:b": "node agents/agent-b.mjs",
     "relayer": "node agents/relayer.mjs",
@@ -14,5 +15,8 @@
     "@noble/ed25519": "^3.2.0",
     "hash-wasm": "^4.13.0",
     "near-api-js": "^7.5.3"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

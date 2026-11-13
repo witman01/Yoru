@@ -4,12 +4,13 @@ A night tea house built entirely in three.js code (no models, no texture
 files). Leave and collect real cheques on NEAR testnet; Collect needs the
 relayer (`node agents/relayer.mjs`) running.
 
-Run it (ES modules need a local server, not file://):
+Live at https://yoru-cheque.up.railway.app.
 
-    cd web
-    python -m http.server 5180
+Run it locally from the repository root (the website and the courier together):
 
-Then open http://127.0.0.1:5180
+    npm start
+
+Then open http://localhost:8787
 
 - `js/house.js`     the lane, facade, noren, roof and tatami room
 - `js/objects.js`   the seven interactive objects and their animations
