@@ -24,7 +24,7 @@ const STOP_VH = 1.6;
 const loader = { shown: 0, target: 10 };
 function tickLoader() {
   loader.shown += (loader.target - loader.shown) * 0.12;
-  $('#loader-count').textContent = Math.round(loader.shown);
+  $('#loader').style.setProperty('--p', (loader.shown / 100).toFixed(3));
   if (loader.target === 100 && loader.shown > 99.4) {
     $('#loader').classList.add('done');
     return;

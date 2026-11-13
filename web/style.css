@@ -864,3 +864,92 @@ legend { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; te
 }
 .page-credits a { color: inherit; }
 @media (max-width: 760px) { .page-credits { display: none; } }
+
+/* =========================================================
+   Loader: a seal stamps down, a brush line fills, lanterns warm up
+   ========================================================= */
+#loader {
+  --p: 0;
+  gap: 0;
+  background: radial-gradient(circle at 50% 46%, #1a1008 0%, #0a0a10 45%, var(--ink) 75%);
+  transition: opacity 1.1s ease 0.25s, visibility 1.1s 0.25s;
+}
+#loader.done { opacity: 0; visibility: hidden; }
+#loader.done .loader-seal { transform: scale(1.08) rotate(-4deg); filter: blur(2px); }
+.loader-glow {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 520px;
+  height: 520px;
+  transform: translate(-50%, -50%) scale(calc(0.6 + var(--p) * 0.5));
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 150, 70, calc(0.08 + var(--p) * 0.22)), transparent 62%);
+  pointer-events: none;
+}
+.loader-seal {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 6px;
+  background: var(--vermilion);
+  color: var(--washi);
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: 3.2rem;
+  line-height: 1;
+  transform: rotate(-4deg);
+  box-shadow: 0 0 0 1px rgba(255, 220, 190, 0.2) inset, 0 18px 50px rgba(200, 64, 47, 0.35);
+  animation: loaderStamp 0.9s cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+  transition: transform 0.9s, filter 0.9s;
+}
+@keyframes loaderStamp {
+  0% { opacity: 0; transform: scale(1.9) rotate(-14deg); filter: blur(6px); }
+  60% { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: rotate(-4deg); }
+}
+.loader-name {
+  margin-top: 1.4rem;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: 0.32em;
+  padding-left: 0.32em;
+  color: var(--washi);
+  animation: loaderFade 1s 0.5s both;
+}
+.loader-line {
+  position: relative;
+  width: 180px;
+  height: 2px;
+  margin-top: 1.1rem;
+  background: rgba(239, 230, 210, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  animation: loaderFade 1s 0.7s both;
+}
+.loader-line span {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(var(--p));
+  background: linear-gradient(90deg, var(--vermilion), var(--amber));
+  box-shadow: 0 0 10px var(--ember);
+  transition: transform 0.25s linear;
+}
+.loader-label {
+  margin-top: 0.9rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--washi-dim);
+  animation: loaderFade 1s 0.9s both, loaderBreathe 2.4s 1.9s ease-in-out infinite;
+}
+@keyframes loaderFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes loaderBreathe { 50% { opacity: 0.55; } }
+
+.docs-link { text-decoration: none; display: inline-flex; align-items: center; }

@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yoru Docs</title>
+    <meta name="description" content="How Yoru works: private claimable escrow on NEAR with a short code, a bound receiver and a gasless claim." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='8' fill='%23c8402f' transform='rotate(-4 32 32)'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23efe6d2' font-family='serif' font-weight='700'%3E%E5%A4%9C%3C/text%3E%3C/svg%3E" />
+    <meta name="theme-color" content="#07080d" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #07080d;
+        --night: #0d0f18;
+        --washi: #efe6d2;
+        --paper: #f4ecd9;
+        --paper-2: #ece0c4;
+        --text: #1b1512;
+        --muted: rgba(27, 21, 18, 0.62);
+        --rule: rgba(27, 21, 18, 0.14);
+        --vermilion: #c8402f;
+        --amber: #f2a65a;
+        --matcha: #4f7d2c;
+        --serif: 'Shippori Mincho B1', 'Noto Serif JP', serif;
+        --sans: 'Zen Kaku Gothic New', system-ui, sans-serif;
+        --mono: 'IBM Plex Mono', ui-monospace, monospace;
+        color-scheme: dark;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+      body {
+        margin: 0;
+        background: radial-gradient(circle at 70% -10%, #2a1608 0%, var(--night) 40%, var(--ink) 80%) fixed;
+        color: var(--washi);
+        font-family: var(--sans);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--vermilion); text-underline-offset: 3px; }
+      code { font-family: var(--mono); font-size: 0.86em; background: rgba(27, 21, 18, 0.07); padding: 0.1em 0.35em; border-radius: 3px; }
+      pre { margin: 0 0 1.2rem; padding: 0.9rem 1rem; overflow-x: auto; background: #1b1512; color: var(--washi); border-radius: 4px; font-size: 0.84rem; line-height: 1.55; }
+      pre code { background: none; padding: 0; font-size: inherit; }
+
+      .top {
+        position: sticky; top: 0; z-index: 5;
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        padding: 14px 28px;
+        background: linear-gradient(rgba(7, 8, 13, 0.92), rgba(7, 8, 13, 0.7));
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(239, 230, 210, 0.08);
+      }
+      .brand { display: flex; align-items: center; gap: 0.7rem; color: inherit; text-decoration: none; }
+      .brand-seal { display: grid; place-content: center; width: 36px; height: 36px; border-radius: 3px; background: var(--vermilion); color: var(--washi); font-family: var(--serif); font-weight: 800; font-size: 1.35rem; transform: rotate(-3deg); }
+      .brand-name { font-family: var(--serif); font-weight: 700; font-size: 1.2rem; letter-spacing: 0.08em; }
+      .brand-docs { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); }
+      .back { padding: 0.55em 1.2em; border-radius: 999px; background: var(--washi); color: var(--ink); text-decoration: none; font-size: 0.86rem; }
+      .back:hover { background: var(--amber); }
+
+      .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 36px; max-width: 1120px; margin: 0 auto; padding: 36px 28px 80px; }
+      nav.toc { position: sticky; top: 96px; align-self: start; font-size: 0.9rem; }
+      .toc h2 { margin: 0 0 0.6rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(239, 230, 210, 0.5); }
+      .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 1px solid rgba(239, 230, 210, 0.14); }
+      .toc a { display: flex; gap: 0.6rem; padding: 0.3rem 0 0.3rem 0.9rem; color: rgba(239, 230, 210, 0.7); text-decoration: none; }
+      .toc a span { font-family: var(--serif); font-weight: 800; color: var(--amber); width: 1.2em; }
+      .toc a:hover { color: var(--washi); }
+
+      /* The page itself is a long scroll of washi. */
+      main {
+        background: linear-gradient(90deg, rgba(120, 80, 40, 0.14), transparent 4%, transparent 96%, rgba(120, 80, 40, 0.14)), linear-gradient(var(--paper), var(--paper-2));
+        color: var(--text);
+        border-left: 10px solid #6e1d14;
+        border-right: 10px solid #6e1d14;
+        border-radius: 2px;
+        padding: 44px 52px 56px;
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 0 0 3px rgba(226, 184, 96, 0.5);
+        position: relative;
+      }
+      main::before, main::after {
+        content: ''; position: absolute; left: -24px; right: -24px; height: 20px; border-radius: 10px;
+        background: linear-gradient(#5a3420, #2a160c 55%, #160b06);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+      main::before { top: -16px; }
+      main::after { bottom: -16px; }
+      .kicker { margin: 0; font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--vermilion); }
+      h1 { margin: 0.3rem 0 0.5rem; font-family: var(--serif); font-weight: 800; font-size: clamp(2.2rem, 4vw, 3rem); line-height: 1.1; }
+      .lede { margin: 0 0 1.5rem; font-family: var(--serif); font-size: 1.2rem; color: #2c2420; }
+      section { padding-top: 1.6rem; margin-top: 1.6rem; border-top: 1px solid var(--rule); }
+      h2 { display: flex; align-items: center; gap: 0.7rem; margin: 0 0 0.8rem; font-family: var(--serif); font-size: 1.7rem; line-height: 1.2; }
+      h2 .k { display: grid; place-content: center; width: 40px; height: 40px; flex: none; border-radius: 3px; background: var(--vermilion); color: var(--washi); font-size: 1.25rem; transform: rotate(-3deg); }
+      h3 { margin: 1.2rem 0 0.4rem; font-family: var(--serif); font-size: 1.2rem; }
+      p, li { font-size: 1rem; }
+      p { margin: 0 0 1rem; }
+      ul, ol.steps { margin: 0 0 1.1rem; padding-left: 1.3rem; }
+      li { margin-bottom: 0.35rem; }
+      .tag { display: inline-block; padding: 0.15rem 0.6rem; margin: 0 0.3rem 0.4rem 0; border: 1px solid var(--rule); border-radius: 999px; font-family: var(--mono); font-size: 0.74rem; }
+
+      table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 1.3rem; font-size: 0.9rem; }
+      th, td { text-align: left; vertical-align: top; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--rule); }
+      th { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: rgba(27, 21, 18, 0.04); }
+      td code { white-space: nowrap; }
+      .wrap { overflow-x: auto; }
+
+      .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0.6rem 0 1.4rem; }
+      .flow div { padding: 0.9rem 0.8rem; border: 1px solid var(--rule); border-radius: 6px; background: rgba(255, 255, 255, 0.35); }
+      .flow b { display: grid; place-content: center; width: 34px; height: 34px; margin-bottom: 0.4rem; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #9cc46a, #5c8a34 45%, #2f5218); color: var(--paper); font-family: var(--serif); font-size: 1.05rem; }
+      .flow strong { display: block; font-family: var(--serif); font-size: 1.02rem; margin-bottom: 0.2rem; }
+      .flow span { font-size: 0.86rem; color: var(--muted); }
+      .note { padding: 0.8rem 1rem; margin: 0 0 1.2rem; border-left: 3px solid var(--vermilion); background: rgba(200, 64, 47, 0.06); border-radius: 0 4px 4px 0; font-size: 0.94rem; }
+      .ok { padding: 0.8rem 1rem; margin: 0 0 1.2rem; border-left: 3px solid var(--matcha); background: rgba(79, 125, 44, 0.08); border-radius: 0 4px 4px 0; font-size: 0.94rem; }
+      details { border-bottom: 1px solid var(--rule); padding: 0.6rem 0; }
+      summary { cursor: pointer; font-family: var(--serif); font-weight: 700; font-size: 1.05rem; }
+      details p { margin: 0.5rem 0 0.2rem; color: #2c2420; }
+      footer { max-width: 1120px; margin: 0 auto; padding: 0 28px 40px; font-size: 0.78rem; color: rgba(239, 230, 210, 0.45); }
+      footer a { color: inherit; }
+
+      @media (max-width: 860px) {
+        .layout { grid-template-columns: 1fr; padding: 24px 16px 60px; gap: 24px; }
+        nav.toc { position: static; }
+        main { padding: 32px 20px 40px; border-width: 6px; }
+        main::before, main::after { left: -14px; right: -14px; }
+        .flow { grid-template-columns: 1fr 1fr; }
+        .top { padding: 12px 16px; }
+        .brand-docs { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <a class="brand" href="./">
+        <span class="brand-seal">夜</span><span class="brand-name">Yoru</span><span class="brand-docs">Docs</span>
+      </a>
+      <a class="back" href="./">Back to the tea house</a>
+    </header>
+
+    <div class="layout">
+      <nav class="toc" aria-label="Contents">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#overview"><span>夜</span>Overview</a></li>
+          <li><a href="#tradition"><span>古</span>From cheques to chain</a></li>
+          <li><a href="#how"><span>流</span>How it works</a></li>
+          <li><a href="#using"><span>手</span>Using the site</a></li>
+          <li><a href="#contract"><span>箱</span>The contract</a></li>
+          <li><a href="#security"><span>守</span>Security</a></li>
+          <li><a href="#agents"><span>機</span>For agents</a></li>
+          <li><a href="#faq"><span>問</span>Questions</a></li>
+        </ol>
+      </nav>
+
+      <main>
+        <p class="kicker">Documentation</p>
+        <h1>Yoru 夜</h1>
+        <p class="lede">Private claimable escrow on NEAR. Short code, bound receiver, gasless claim.</p>
+        <p>
+          Leave NEAR behind a 16-character claim code. Anyone holding the code can collect it to any address, without a wallet, an account or gas.
+          Yoru is built for agent-to-agent payments, and for every moment when the other side simply isn't ready.
+        </p>
+        <span class="tag">NEAR testnet</span><span class="tag">ed25519</span><span class="tag">Argon2id</span><span class="tag">Rust · near-sdk 5</span><span class="tag">three.js</span>
+
+        <section id="overview">
+          <h2><span class="k">夜</span>Overview</h2>
+          <p>Sending crypto assumes the receiver already has an account, tokens for gas, and an address they've shared. Yoru removes all three.</p>
+          <div class="wrap">
+            <table>
+              <thead><tr><th>Role</th><th>What they need</th><th>What they do</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Sender</strong> (a person or an agent)</td><td>A NEAR wallet with funds</td><td>Deposits NEAR, receives a 16-character code, sends it to anyone</td></tr>
+                <tr><td><strong>Receiver</strong></td><td>Only the code</td><td>Chooses where the money goes and collects. Signs nothing with a wallet, pays nothing</td></tr>
+                <tr><td><strong>Courier</strong> (relayer)</td><td>A funded account</td><td>Submits the signed claim and pays the gas. Never sees the code</td></tr>
+                <tr><td><strong>Anyone</strong></td><td>Any account</td><td>After 7 days, can send an unclaimed cheque home to its sender</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="tradition">
+          <h2><span class="k">古</span>From cheques to chain</h2>
+          <p>For generations, people have paid each other with things the receiver claims later: cheques, money orders, red envelopes. You didn't need the other person's bank details to write one. Yoru brings that idea to NEAR.</p>
+          <div class="wrap">
+            <table>
+              <thead><tr><th></th><th>A paper cheque</th><th>Yoru</th></tr></thead>
+              <tbody>
+                <tr><td>What you hand over</td><td>A signed slip of paper</td><td>A 16-character claim code, link or QR code</td></tr>
+                <tr><td>Who can cash it</td><td>The named payee, checked by a bank</td><td>Whoever holds the code; the receiving account is fixed when they sign</td></tr>
+                <tr><td>Receiver needs</td><td>A bank account</td><td>Nothing: a new account is created by the payment</td></tr>
+                <tr><td>Where the money waits</td><td>The sender's bank</td><td>An escrow contract nobody controls</td></tr>
+                <tr><td>If it's never cashed</td><td>It goes stale</td><td>After 7 days it walks home to the sender</td></tr>
+                <tr><td>Who it's for</td><td>People</td><td>People and autonomous AI agents</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="ok"><strong>A traditional payment concept, executed onchain, ready for agents.</strong></p>
+        </section>
+
+        <section id="how">
+          <h2><span class="k">流</span>How it works</h2>
+          <div class="flow">
+            <div><b>封</b><strong>Seal</strong><span>The browser makes a random code and stretches it into an ed25519 key.</span></div>
+            <div><b>箱</b><strong>Deposit</strong><span>The contract stores the NEAR and only the public half of the key.</span></div>
+            <div><b>宛</b><strong>Sign</strong><span>The code holder signs a message that names the receiving account.</span></div>
+            <div><b>灯</b><strong>Deliver</strong><span>A courier submits it and pays the gas; the contract verifies and pays.</span></div>
+          </div>
+          <h3>The signed message</h3>
+          <pre><code>"yoru:claim:v1" || contract_id || cheque_id (u64, little-endian) || receiver</code></pre>
+          <p>The contract rebuilds these bytes and checks the signature with NEAR's built-in <code>env::ed25519_verify</code>. Because the receiver is inside the signature, nobody can change it.</p>
+          <h3>Code to key</h3>
+          <pre><code>seed = Argon2id(code, salt = "yoru:v1:" + contract_id, 64 MiB, 3 passes, 32 bytes)
+key  = ed25519 key pair from seed      // the contract stores only the public key</code></pre>
+        </section>
+
+        <section id="using">
+          <h2><span class="k">手</span>Using the site</h2>
+          <h3>置 Leave a cheque</h3>
+          <ol class="steps">
+            <li>Scroll to the counter, or press <strong>Leave a cheque</strong>.</li>
+            <li>Enter an amount and, if you like, a note. The note never goes on chain; it is copied with the code.</li>
+            <li>Press the green <strong>封</strong> seal and approve in Meteor or MyNearWallet (testnet).</li>
+            <li>Copy the <strong>code</strong>, the <strong>claim link</strong>, or show the <strong>QR code</strong>. It is shown once.</li>
+          </ol>
+          <h3>受 Collect a cheque</h3>
+          <ol class="steps">
+            <li>Open the claim link, or paste the code into <strong>Collect</strong>.</li>
+            <li>Choose where it goes:
+              <ul>
+                <li><strong>My wallet:</strong> connect Meteor or MyNearWallet.</li>
+                <li><strong>New account:</strong> no wallet at all. We make a key; download it before closing.</li>
+                <li><strong>An address:</strong> a <code>name.testnet</code>, a 64-character address, an exchange's NEAR deposit address or a <code>0x…</code> MetaMask address.</li>
+              </ul>
+            </li>
+            <li>Press the green <strong>受</strong> seal. The courier pays the gas.</li>
+          </ol>
+          <h3>読 Read a cheque</h3>
+          <p>Look up any cheque by code or number without touching it: amount, status, sender, receiver and time left. After 7 days, send an unclaimed cheque home from here.</p>
+          <p class="note">Whoever holds the code or the claim link can collect. Send it only to the person you mean.</p>
+        </section>
+
+        <section id="contract">
+          <h2><span class="k">箱</span>The contract</h2>
+          <p>Live on testnet at <a href="https://testnet.nearblocks.io/address/yoru-183ae9.testnet" target="_blank" rel="noopener"><code>yoru-183ae9.testnet</code></a> (7-day window) and <code>yoru-demo-183ae9.testnet</code> (3-minute window, for demos).</p>
+          <h3>Methods</h3>
+          <div class="wrap">
+            <table>
+              <thead><tr><th>Method</th><th>Kind</th><th>Who can call</th><th>What it does</th></tr></thead>
+              <tbody>
+                <tr><td><code>create_cheque(public_key)</code></td><td>Payable</td><td>Anyone (the sender)</td><td>Stores a cheque under the code's public key. The deposit, less storage, is the amount. Returns the cheque id.</td></tr>
+                <tr><td><code>claim(cheque_id, receiver, signature)</code></td><td>Change</td><td>Anyone (usually a courier)</td><td>Verifies the signature over the claim message, then transfers the amount to <code>receiver</code>.</td></tr>
+                <tr><td><code>refund(cheque_id)</code></td><td>Change</td><td>Anyone, after 7 days</td><td>Sends an unclaimed cheque back to its sender. Pays only the sender.</td></tr>
+                <tr><td><code>get_cheque(cheque_id)</code></td><td>View</td><td>Anyone</td><td>Amount, status, sender, receiver, created and expiry times.</td></tr>
+                <tr><td><code>get_cheque_by_key(public_key)</code></td><td>View</td><td>Anyone</td><td>Finds a cheque from the key a code derives, so a receiver only needs the code.</td></tr>
+                <tr><td><code>on_claim_transfer</code>, <code>on_refund_transfer</code></td><td>Private callback</td><td>The contract itself</td><td>Marks a cheque collected or returned, or reopens it if the transfer failed.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>A cheque's life</h3>
+          <div class="wrap">
+            <table>
+              <thead><tr><th>Status</th><th>Meaning</th><th>Next</th></tr></thead>
+              <tbody>
+                <tr><td><code>Open</code></td><td>Waiting in the box</td><td>Claimed with a valid signature, or refunded after 7 days</td></tr>
+                <tr><td><code>Claiming</code></td><td>A transfer to the receiver is in flight</td><td><code>Claimed</code>, or back to <code>Open</code> if it failed</td></tr>
+                <tr><td><code>Claimed</code></td><td>Delivered</td><td>Final</td></tr>
+                <tr><td><code>Refunding</code></td><td>Going back to the sender</td><td><code>Refunded</code>, or back to <code>Open</code> if it failed</td></tr>
+                <tr><td><code>Refunded</code></td><td>Returned to the sender</td><td>Final</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>Errors you may see</h3>
+          <div class="wrap">
+            <table>
+              <thead><tr><th>Message</th><th>Why</th></tr></thead>
+              <tbody>
+                <tr><td><code>signature does not match this cheque and receiver</code></td><td>Wrong code, or the receiver was changed after signing</td></tr>
+                <tr><td><code>cheque is not open</code></td><td>Already collected or returned</td></tr>
+                <tr><td><code>cheque has expired</code></td><td>The 7 days are over; it can only go home now</td></tr>
+                <tr><td><code>cheque has not expired</code></td><td>A refund was tried too early</td></tr>
+                <tr><td><code>public_key already used</code></td><td>Each code makes exactly one cheque</td></tr>
+                <tr><td><code>deposit must exceed storage cost</code></td><td>The deposit doesn't cover the cheque's storage</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="security">
+          <h2><span class="k">守</span>Security</h2>
+          <div class="wrap">
+            <table>
+              <thead><tr><th>Threat</th><th>What stops it</th></tr></thead>
+              <tbody>
+                <tr><td>Someone copies a claim from the mempool and redirects it</td><td>The receiver is inside the signed bytes; changing it breaks the signature</td></tr>
+                <tr><td>Someone front-runs a claim unchanged</td><td>It still pays the original receiver; the front-runner only pays their gas</td></tr>
+                <tr><td>A claim is replayed</td><td>A cheque pays out once; the second attempt is <code>cheque is not open</code></td></tr>
+                <tr><td>A signature is reused on another deployment</td><td>The contract id is inside the signed bytes</td></tr>
+                <tr><td>Codes are guessed offline from the public key</td><td>80 random bits plus a memory-hard Argon2id stretch make guessing impractical</td></tr>
+                <tr><td>A transfer fails (for example, a missing account)</td><td>The cheque reopens, so the code still works</td></tr>
+                <tr><td>Money gets stuck forever</td><td>After 7 days anyone can trigger a refund, which pays only the sender</td></tr>
+                <tr><td>The courier learns the code</td><td>It only ever receives the cheque id, the receiver and a signature</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note"><strong>Private-ish, honestly.</strong> The code never touches the chain or the courier, and receivers don't publish an address in advance. The chain still shows which account funded a cheque and which account it paid.</p>
+        </section>
+
+        <section id="agents">
+          <h2><span class="k">機</span>For agents</h2>
+          <p>Agents can earn, but they can't get paid without a funded wallet. With Yoru, an agent created a second ago can be paid, and any agent can act as the courier.</p>
+          <div class="wrap">
+            <table>
+              <thead><tr><th>Script</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td><code>agents/agent-a.mjs</code></td><td>Payer: funds a cheque and writes only the code to Agent B's inbox</td></tr>
+                <tr><td><code>agents/agent-b.mjs</code></td><td>Receiver: has only the code; claims to a brand-new account; sends no transaction</td></tr>
+                <tr><td><code>agents/relayer.mjs</code></td><td>Courier: accepts signed claims over HTTP, submits them, pays gas</td></tr>
+                <tr><td><code>agents/attacker.mjs</code></td><td>Copies a published claim and tries to redirect and replay it</td></tr>
+                <tr><td><code>agents/refund.mjs</code></td><td>Sends an expired cheque home, from a stranger's account</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <pre><code>npm install
+node agents/relayer.mjs              # leave running
+node agents/agent-a.mjs pay 0.5      # Agent A funds a cheque
+node agents/agent-b.mjs claim        # Agent B collects with no account</code></pre>
+        </section>
+
+        <section id="faq">
+          <h2><span class="k">問</span>Questions</h2>
+          <details><summary>Do I need a wallet to receive?</summary><p>No. Choose "New account": the page makes a key, the payment creates the account, and you download the key file to use the money later.</p></details>
+          <details><summary>Can I claim to MetaMask?</summary><p>Yes, paste your <code>0x…</code> address. You receive NEAR on NEAR, at an account that your MetaMask key controls, opened through a NEAR wallet that supports Ethereum wallets. It is not ETH on Ethereum.</p></details>
+          <details><summary>Can I claim to an exchange?</summary><p>Any NEAR deposit address works on the same network. Exchanges exist only on mainnet, and some require a memo, which a plain transfer can't carry.</p></details>
+          <details><summary>What if I lose the code?</summary><p>Nobody can recover it, not even Yoru. After 7 days the cheque returns to the sender.</p></details>
+          <details><summary>Is the note private?</summary><p>The note is never stored on chain. It travels only with the code when you copy or share it.</p></details>
+          <details><summary>Is this on mainnet?</summary><p>Not yet. Yoru runs on NEAR testnet, where the coins have no value.</p></details>
+        </section>
+      </main>
+    </div>
+    <footer>
+      Yoru · <a href="https://github.com/witman01/Yoru" target="_blank" rel="noopener">Source on GitHub</a> · NEAR testnet
+    </footer>
+  </body>
+</html>
